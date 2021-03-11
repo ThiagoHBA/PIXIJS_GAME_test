@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move</title>
+</head>
+<body>
+<script src="js/pixi.min.js"></script>
+<script>
+
+//Create a Pixi Application
+let app = new PIXI.Application({ 
+    width: 800, 
+    height: 600,                       
+    antialiasing: true, 
+    transparent: false, 
+    backgroundColor: 0xAAAAAA,
+    resolution: 1
+  }
+);
+
+document.body.appendChild(app.view);
+
+const texture = PIXI.Texture.from('images/player.png');
+
+// Scale mode for pixelation
+texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+
+let player;
+let aumento = 1;
+setup();
+
+function setup() {
+
+  player = new PIXI.Sprite(texture);
+  player.y = 96; 
+  app.stage.addChild(player);
+ 
+
+  app.ticker.add(param => gameLoop(param));
+}
+
+function gameLoop(param){
+    
+  player.x += aumento;
+  console.log(player.x);
+  if(player.x > 800){
+    player.y+=1;
+    if(player.y > 600)
+    player.y= 0;
+    player.x=0;
+    aumento += 1;
+  }
+
+}
+
+</script>
+</body>
+</html>
+

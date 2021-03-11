@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rotation</title>
+</head>
+<body>
+<script src="js/pixi.min.js"></script>
+<script>
+
+const app = new PIXI.Application({ backgroundColor: 0x1099bb });
+document.body.appendChild(app.view);
+
+const player = PIXI.Sprite.from('images/player.png');
+
+// Set the initial position
+player.anchor.set(0.5);
+player.x = app.screen.width / 2;
+player.y = app.screen.height / 2;
+
+app.stage.addChild(player);
+
+app.ticker.add((param) => {
+    player.rotation += 0.1 * param;
+});
+
+</script>
+</body>
+</html>
+

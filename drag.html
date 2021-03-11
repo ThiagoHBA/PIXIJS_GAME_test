@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="js/pixi.min.js"></script>
+    <script>
+          let app = new PIXI.Application(
+                {
+                    width: 800,
+                    height: 600,
+                    backgroundColor: 0xAAAAAA,
+                    antialiasing: true,
+                    transparent: false,
+                    resolution: 1,
+                }
+            );
+
+        document.body.appendChild(app.view);
+        
+        const texture = PIXI.Texture.from('images/player.png');
+
+        // Scale mode for pixelation
+        texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+
+        for (let i = 0; i < 10; i++) {
+            createPlayer(
+                Math.floor(Math.random() * app.screen.width),
+                Math.floor(Math.random() * app.screen.height),
+            );
+        }
+
+        function createPlayer(x, y) {
+        // create our little bunny friend..
+        const player = new PIXI.Sprite(texture);
+
+        // enable the bunny to be interactive... this will allow it to respond to mouse and touch events
+        player.interactive = true;
+
+        // this button mode will mean the hand cursor appears when you roll over the bunny with your mouse
+        player.buttonMode = true;
+
+        // center the bunny's anchor point
+        player.anchor.set(0.5);
+
+        // make it a bit bigger, so it's easier to grab
+        player.scale.set(3);
+
+        // setup events for mouse + touch using
+        // the pointer events
+        player
+            .on('pointerdown', onDragStart)
+            .on('pointerup', onDragEnd)
+            .on('pointerupoutside', onDragEnd)
+            .on('pointermove', onDragMove);
+
+        // For mouse-only events
+        // .on('mousedown', onDragStart)
+        // .on('mouseup', onDragEnd)
+        // .on('mouseupoutside', onDragEnd)
+        // .on('mousemove', onDragMove);
+
+        // For touch-only events
+        // .on('touchstart', onDragStart)
+        // .on('touchend', onDragEnd)
+        // .on('touchendoutside', onDragEnd)
+        // .on('touchmove', onDragMove);
+
+        // move the sprite to its designated position
+        player.x = x;
+        player.y = y;
+
+        // add it to the stage
+        app.stage.addChild(player);
+    }
+
+    function onDragStart(event) {
+    // store a reference to the data
+    // the reason for this is because of multitouch
+    // we want to track the movement of this particular touch
+    this.data = event.data;
+    this.alpha = 0.5;
+    this.dragging = true;
+    }
+
+    function onDragEnd() {
+    this.alpha = 1;
+    this.dragging = false;
+    // set the interaction data to null
+    this.data = null;
+    }
+
+    function onDragMove() {
+    if (this.dragging) {
+        const newPosition = this.data.getLocalPosition(this.parent);
+        this.x = newPosition.x;
+        this.y = newPosition.y;
+    }
+    }
+
+    </script>
+</body>
+</html>
