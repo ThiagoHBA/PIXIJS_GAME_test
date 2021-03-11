@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIXI Hello World</title>
+    <script src="js/pixi.min.js"></script>
+</head>
+
+<body>
+    <script>
+        let count = 0;
+        const app = new PIXI.Application({ antialias: true, backgroundColor: 0xAAAAAA });
+        document.body.appendChild(app.view);
+
+        const graphics = new PIXI.Graphics();
+        const graphics1 = new PIXI.Graphics();
+        const graphics2 = new PIXI.Graphics();
+
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+
+        const sprite = PIXI.Sprite.from('images/pixel.jpg');
+        let sprite_x = app.screen.width * 0.22;
+        let sprite_y = app.screen.height * 0.75;
+
+        sprite.anchor.set(0.5);
+        sprite.x = sprite_x;
+        sprite.y = sprite_y;
+
+        sprite.interactive = true;
+        sprite.buttonMode = true;
+
+        // Pointers normalize touch and mouse
+        sprite.on('pointerdown', onClick);
+
+        // Rectangle
+        graphics.beginFill(0xDE3249);
+        graphics.drawRect(50, 50, 100, 150);
+
+        graphics.x = app.screen.width * 0.1;
+        graphics.y = app.screen.height * 0.7;
+        graphics.endFill();
+
+        graphics1.beginFill(0xDE3249);
+        graphics1.drawRect(50, 50, 100, 150);
+
+        graphics1.x = app.screen.width * 0.3;
+        graphics1.y = app.screen.height * 0.7;
+        graphics1.endFill();
+
+        graphics2.beginFill(0xDE3249);
+        graphics2.drawRect(50, 50, 100, 150);
+
+        graphics2.x = app.screen.width * 0.5;
+        graphics2.y = app.screen.height * 0.7;
+        graphics2.endFill();
+
+        app.stage.addChild(graphics);
+        app.stage.addChild(graphics1);
+        app.stage.addChild(graphics2);
+        app.stage.addChild(sprite);
+
+        function onClick() {
+            sprite.x *= 1.7;
+
+            count++;
+            if (count == 3) {
+                sprite.x = app.screen.width * 0.22;
+                sprite.y = app.screen.height * 0.75;
+                count = 0;
+            }
+
+            
+        }
+
+    </script>
+</body>
+
+</html>
