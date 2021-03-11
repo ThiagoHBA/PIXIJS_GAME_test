@@ -1,81 +1,66 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIXI Hello World</title>
-    <script src="js/pixi.min.js"></script>
+    <title>Move</title>
 </head>
-
 <body>
-    <script>
-        let count = 0;
-        const app = new PIXI.Application({ antialias: true, backgroundColor: 0xAAAAAA });
-        document.body.appendChild(app.view);
+<script src="js/pixi.min.js"></script>
+<script>
 
-        const graphics = new PIXI.Graphics();
-        const graphics1 = new PIXI.Graphics();
-        const graphics2 = new PIXI.Graphics();
+//Create a Pixi Application
+let app = new PIXI.Application({ 
+    width: window.screen.width, 
+    height: window.screen.height,
+    antialiasing: true, 
+    transparent: false, 
+    backgroundColor: 0xAAAAAA,
+    resolution: 1,
+  }
+);
 
-        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+document.body.appendChild(app.view);
 
-        const sprite = PIXI.Sprite.from('images/pixel.jpg');
-        let sprite_x = app.screen.width * 0.22;
-        let sprite_y = app.screen.height * 0.75;
+PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
-        sprite.anchor.set(0.5);
-        sprite.x = sprite_x;
-        sprite.y = sprite_y;
+const sprite = PIXI.Sprite.from('images/start-btn.png');
 
-        sprite.interactive = true;
-        sprite.buttonMode = true;
+sprite.anchor.set(0.5);
+sprite.x = app.screen.width / 2;
+sprite.y = app.screen.height / 2;
+sprite.scale.x *= 0.1;
+sprite.scale.y *= 0.1;
 
-        // Pointers normalize touch and mouse
-        sprite.on('pointerdown', onClick);
+sprite.interactive = true;
+sprite.buttonMode = true;
 
-        // Rectangle
-        graphics.beginFill(0xDE3249);
-        graphics.drawRect(50, 50, 100, 150);
+sprite.on('pointerdown', onClick);
 
-        graphics.x = app.screen.width * 0.1;
-        graphics.y = app.screen.height * 0.7;
-        graphics.endFill();
+app.stage.addChild(sprite);
 
-        graphics1.beginFill(0xDE3249);
-        graphics1.drawRect(50, 50, 100, 150);
+function createObstacle(){
+  let rock = Math.ceil(Math.random() * (5));
+  let _player = new PIXI.Sprite.from('images/rock' + rock.toString() + '.png');
 
-        graphics1.x = app.screen.width * 0.3;
-        graphics1.y = app.screen.height * 0.7;
-        graphics1.endFill();
+  _player.scale.x *= Math.random() * 0.3;
+  _player.scale.y *= Math.random() * 0.5;
 
-        graphics2.beginFill(0xDE3249);
-        graphics2.drawRect(50, 50, 100, 150);
+  _player.x = Math.random() * (window.screen.width); 
+  app.stage.addChild(_player);
+  app.ticker.add(param => gameLoop(param, _player));
+}
 
-        graphics2.x = app.screen.width * 0.5;
-        graphics2.y = app.screen.height * 0.7;
-        graphics2.endFill();
+function gameLoop(param, value){
+  value.y += 5;
+}
 
-        app.stage.addChild(graphics);
-        app.stage.addChild(graphics1);
-        app.stage.addChild(graphics2);
-        app.stage.addChild(sprite);
+function onClick() {
+  //app.stage.removeChild(sprite);
+  setInterval(createObstacle, 100);
+} 
 
-        function onClick() {
-            sprite.x *= 1.7;
-
-            count++;
-            if (count == 3) {
-                sprite.x = app.screen.width * 0.22;
-                sprite.y = app.screen.height * 0.75;
-                count = 0;
-            }
-
-            
-        }
-
-    </script>
+</script>
 </body>
-
 </html>
