@@ -40,12 +40,20 @@ sprite.on('pointerdown', onClick);
 
 app.stage.addChild(sprite);
 
-function createObstacle(){
-  let rock = Math.ceil(Math.random() * (5));
-  let _player = new PIXI.Sprite.from('images/rock' + rock.toString() + '.png');
+const rocks = [
+'images/rock1.png',
+'images/rock2.png',
+'images/rock3.png',
+'images/rock4.png',
+'images/rock5.png'
+];
 
-  _player.scale.x *= Math.random() * 0.3;
-  _player.scale.y *= Math.random() * 0.5;
+function createObstacle(){
+  let rock = Math.ceil(Math.random() * rocks.length + 1);
+  let _player = new PIXI.Sprite.from(rocks[rock]);
+
+  _player.scale.x *= Math.random() * (0.3 - 0.1) +   0.1;
+  _player.scale.y *= Math.random() * (0.5 - 0.1) + 0.1;
 
   _player.x = Math.random() * (window.screen.width); 
   app.stage.addChild(_player);
@@ -58,7 +66,7 @@ function gameLoop(param, value){
 
 function onClick() {
   //app.stage.removeChild(sprite);
-  setInterval(createObstacle, 100);
+  setInterval(createObstacle, 500);
 } 
 
 </script>
