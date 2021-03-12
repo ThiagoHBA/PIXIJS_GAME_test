@@ -52,7 +52,7 @@ function createObstacle(){
   let rock = Math.ceil(Math.random() * rocks.length + 1);
   let _player = new PIXI.Sprite.from(rocks[rock]);
 
-  _player.scale.x *= Math.random() * (0.3 - 0.1) +   0.1;
+  _player.scale.x *= Math.random() * (0.3 - 0.1) + 0.1;
   _player.scale.y *= Math.random() * (0.5 - 0.1) + 0.1;
 
   _player.x = Math.random() * (window.screen.width); 
