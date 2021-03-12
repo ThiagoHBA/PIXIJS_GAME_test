@@ -11,8 +11,8 @@
     <script>
           let app = new PIXI.Application(
                 {
-                    width: 800,
-                    height: 600,
+                    width: 1600,
+                    height: 700,
                     backgroundColor: 0xAAAAAA,
                     antialiasing: true,
                     transparent: false,
@@ -27,7 +27,7 @@
         // Scale mode for pixelation
         texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 100; i++) {
             createPlayer(
                 Math.floor(Math.random() * app.screen.width),
                 Math.floor(Math.random() * app.screen.height),
@@ -103,5 +103,6 @@
     }
 
     </script>
+    <script src="utils/utils.js"></script>
 </body>
 </html>
