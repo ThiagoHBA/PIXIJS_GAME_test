@@ -10,52 +10,75 @@
     <script src="js/pixi.min.js"></script>
     <script>
 
+    let actualY;
+    let jump = false;
+
     let app = new PIXI.Application({ 
-        width: 620, 
-        height: 620,                        
+        width: window.screen.width, 
+        height: window.screen.height,     
         antialiasing: true, 
         transparent: false, 
         backgroundColor: 0xAAAAAA,
-        resolution: 1
+        resolution: 1,
     }
     );
 
     document.body.appendChild(app.view);
-    
+   
     const texture = PIXI.Texture.from('images/player.png');
     
     texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     
     let state;
     let player = new PIXI.Sprite(texture);
-    player.y = 580; 
+ 
+    player.y = 250; 
+    player.x = 250;
     player.vx = 0;
     player.vy = 0;
+
     app.stage.addChild(player);
 
-
     let left = keyboard(37),
-        up = keyboard(38),
+        up = keyboard(32),
         right = keyboard(39),
         down = keyboard(40);
 
     left.press = function() {
-
         player.vx = -5;
         player.vy = 0;
     };
 
     left.release = function() {
-
         if (!right.isDown && player.vy === 0) {
         player.vx = 0;
         }
     };
 
+    const target = new PIXI.Point();
+
     up.press = function() {
-        player.vy = -5;
-        player.vx = 0;
+        if(jump) return;
+        jump = true;
+        
+        actualY = player.y;
+        target.y = player.y - 100;
+
+        app.ticker.add(() => {
+            player.y += (target.y - player.y) * 0.1;
+        
+            if(Math.floor(player.y) == Math.floor(target.y)){
+                target.y = Math.floor(actualY);
+            }
+
+            if(Math.ceil(player.y) == Math.floor(actualY)){
+                jump = false;
+                return;
+            }
+        });
+        
     };
+
     up.release = function() {
         if (!down.isDown && player.vx === 0) {
         player.vy = 0;
@@ -69,16 +92,6 @@
     right.release = function() {
         if (!left.isDown && player.vy === 0) {
         player.vx = 0;
-        }
-    };
-
-    down.press = function() {
-        player.vy = 5;
-        player.vx = 0;
-    };
-    down.release = function() {
-        if (!up.isDown && player.vx === 0) {
-        player.vy = 0;
         }
     };
 
