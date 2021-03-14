@@ -11,8 +11,8 @@
     <script>
 
     let app = new PIXI.Application({ 
-        width: 620, 
-        height: 620,                        
+        width: window.screen.width - 64, 
+        height: window.screen.height - 162,                        
         antialiasing: true, 
         transparent: false, 
         backgroundColor: 0xAAAAAA,
@@ -20,67 +20,84 @@
     }
     );
 
+    app.stage.interactive = true;
+
+    const bg = PIXI.Sprite.from('images/background-image.png');
+    bg.width = window.screen.width - 64;
+    bg.height = window.screen.height - 162;
+    app.stage.addChild(bg);
+
     document.body.appendChild(app.view);
+    const graphics = new PIXI.Graphics();
+
+    // graphics.lineStyle(2, 0xFEEB77, 1);
+    graphics.beginFill(0x650A5A);
+    graphics.drawRect(200, 50, 100, 100);
+    graphics.endFill();
+
+    app.stage.addChild(graphics);
     
     const texture = PIXI.Texture.from('images/player.png');
+    const floor = window.screen.height - 212;
+    const wallEnd = window.screen.width;
+    const wallStart = 0;
     
     texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     
     let state;
     let player = new PIXI.Sprite(texture);
-    player.y = 580; 
+    player.y = floor; 
     player.vx = 0;
     player.vy = 0;
     app.stage.addChild(player);
 
 
     let left = keyboard(37),
-        up = keyboard(38),
+        up = keyboard(32),
         right = keyboard(39),
         down = keyboard(40);
 
-    left.press = function() {
-
-        player.vx = -5;
-        player.vy = 0;
-    };
-
-    left.release = function() {
-
-        if (!right.isDown && player.vy === 0) {
-        player.vx = 0;
+        left.press= function(){
+            player.vx = -5;
         }
-    };
-
-    up.press = function() {
-        player.vy = -5;
-        player.vx = 0;
-    };
-    up.release = function() {
-        if (!down.isDown && player.vx === 0) {
-        player.vy = 0;
+        left.release= function(){
+            player.vx = 0;
         }
-    };
-
-    right.press = function() {
-        player.vx = 5;
-        player.vy = 0;
-    };
-    right.release = function() {
-        if (!left.isDown && player.vy === 0) {
-        player.vx = 0;
+        
+        right.press = function(){
+            player.vx = 5;
         }
-    };
-
-    down.press = function() {
-        player.vy = 5;
-        player.vx = 0;
-    };
-    down.release = function() {
-        if (!up.isDown && player.vx === 0) {
-        player.vy = 0;
+        right.release = function(){
+            player.vx = 0;
         }
-    };
+
+        function reset() {
+            target.y = actualY;
+        }
+
+        const target = new PIXI.Point();
+        let actualY;
+        let jump = false;
+        up.press = function() {
+        if(jump) return;
+        jump = true;
+
+        actualY = player.y;
+        target.y = player.y - 100;
+
+        app.ticker.add(() => {
+            player.y += (target.y - player.y) * 0.1;
+
+            if(Math.floor(player.y) == Math.floor(target.y)){
+                target.y = Math.floor(actualY);
+            }
+
+            if(Math.ceil(player.y) == Math.floor(actualY)){
+                jump = false;
+                return;
+            }
+        });
+        };
 
     state = play;
 
