@@ -7,9 +7,9 @@
     <title>Teclado</title>
 </head>
 <body>
-    <script src="js/pixi.min.js"></script>
+    <script  src="js/pixi.min.js"></script>
     <script>
-
+    
     let app = new PIXI.Application({ 
         width: window.screen.width - 64, 
         height: window.screen.height - 162,                        
@@ -74,30 +74,42 @@
         function reset() {
             target.y = actualY;
         }
+        
 
         const target = new PIXI.Point();
         let actualY;
-        let jump = false;
-        up.press = function() {
-        if(jump) return;
-        jump = true;
 
-        actualY = player.y;
-        target.y = player.y - 100;
+        let jumping = false;
+        const
+        axis = 'y',
+        direction = -1, //to Top
+        gravity = 1,
+        power = 20,
+        jumpAt = player[axis];
 
-        app.ticker.add(() => {
-            player.y += (target.y - player.y) * 0.1;
+        up.press =  function() {
+            if (jumping) return;
+            jumping = true;
 
-            if(Math.floor(player.y) == Math.floor(target.y)){
-                target.y = Math.floor(actualY);
+            let time = 0;
+
+            const tick = deltaMs => {
+                
+                const jumpHeight = (-gravity / 2) * Math.pow(time, 2) + power * time;
+
+                if (jumpHeight < 0) {
+                    jumping = false;
+                    PIXI.Ticker.shared.remove(tick);
+                    player[axis] = jumpAt;
+                    return;
+                }
+
+                player[axis] = jumpAt + (jumpHeight * direction);
+                time += deltaMs;
             }
 
-            if(Math.ceil(player.y) == Math.floor(actualY)){
-                jump = false;
-                return;
-            }
-        });
-        };
+            PIXI.Ticker.shared.add(tick);
+        }
 
     state = play;
 
